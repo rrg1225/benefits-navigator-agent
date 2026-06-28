@@ -48,6 +48,7 @@ npm run start
 | `GET` | `/api/health` | Service health and provider mode |
 | `GET` | `/api/tools` | Agent tool catalog |
 | `GET` | `/api/metrics/runtime` | Runtime counters |
+| `GET` | `/api/metrics/scorecard` | Operational readiness score and checks |
 | `POST` | `/api/runs` | Run benefits navigation and persist trace |
 
 ## Quality Gates
