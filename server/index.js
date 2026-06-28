@@ -33,7 +33,7 @@ export function createApp() {
 
   app.use("/api", notFound);
   app.use(express.static(join(rootDir, "dist")));
-  app.get("*", (_req, res) => res.sendFile(join(rootDir, "dist", "index.html")));
+  app.get(/.*/, (_req, res) => res.sendFile(join(rootDir, "dist", "index.html")));
   app.use(errorHandler("benefits-navigator-agent"));
   return app;
 }
