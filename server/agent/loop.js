@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { classifySafety, validateToolOutput } from "./policies.js";
+import { assessSupportIntensity, classifySafety, validateToolOutput } from "./policies.js";
 import { runTool } from "./tools.js";
 
 export async function runNavigator(profile, options = {}) {
@@ -40,11 +40,13 @@ function finish(state, status, reason) {
   state.status = status;
   state.completedAt = new Date().toISOString();
   const handoff = state.observations.find((item) => item.tool === "handoff.compose")?.output;
+  const supportIntensity = assessSupportIntensity(state.normalizedProfile || state.profile, state.safety);
   state.final = {
     status,
     reason,
     safety: state.safety,
     quality: {
+      supportIntensity,
       groundedPrograms: state.programs.length,
       dryRunOnly: state.mode === "dry-run",
       externalSubmissions: state.observations.filter((item) => item.output?.externalSubmissionPerformed).length,

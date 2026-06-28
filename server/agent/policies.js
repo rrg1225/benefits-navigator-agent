@@ -30,3 +30,24 @@ export function validateToolOutput(tool, output) {
   if (tool === "handoff.compose") return Boolean(output?.summary && output?.disclaimer);
   return false;
 }
+
+export function assessSupportIntensity(profile, safety) {
+  const text = JSON.stringify(profile || {});
+  const householdSize = Number(profile?.householdSize || 1);
+  const incomeMonthly = Number(profile?.incomeMonthly || 0);
+  const needs = Array.isArray(profile?.needs) ? profile.needs : [];
+
+  let score = 20;
+  score += Math.min(20, householdSize * 3);
+  score += Math.min(25, needs.length * 8);
+  if (incomeMonthly > 0 && incomeMonthly < 1500) score += 15;
+  if (/eviction|shelter|unsafe|medical|medication|childcare|disabled/i.test(text)) score += 18;
+  if (safety?.level === "crisis") score += 25;
+  if (safety?.level === "blocked") score = 0;
+
+  const bounded = Math.max(0, Math.min(100, score));
+  return {
+    score: bounded,
+    tier: bounded >= 80 ? "critical" : bounded >= 60 ? "high-touch" : bounded >= 40 ? "guided" : "standard"
+  };
+}

@@ -95,10 +95,11 @@ export default function App() {
             <span className={`status ${run.status}`}>{run.status}</span>
             <h2>{run.final.reason}</h2>
             <div className="metrics">
+              <Metric label="Intensity" value={run.final.quality.supportIntensity.tier} />
+              <Metric label="Score" value={run.final.quality.supportIntensity.score} />
               <Metric label="Programs" value={run.final.quality.groundedPrograms} />
               <Metric label="Submissions" value={run.final.quality.externalSubmissions} />
               <Metric label="Validated" value={run.final.quality.validatedTools} />
-              <Metric label="Dry run" value={String(run.final.quality.dryRunOnly)} />
             </div>
           </div>
           <div className="panel">

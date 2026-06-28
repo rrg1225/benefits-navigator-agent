@@ -25,6 +25,8 @@ test("creates a grounded benefits navigation handoff", async (t) => {
   assert.equal(run.status, "completed");
   assert.ok(run.final.quality.groundedPrograms >= 2);
   assert.equal(run.final.quality.externalSubmissions, 0);
+  assert.ok(run.final.quality.supportIntensity.score >= 60);
+  assert.equal(run.final.quality.supportIntensity.tier, "high-touch");
   assert.match(run.final.handoff.disclaimer, /not legal/i);
 });
 
@@ -47,4 +49,15 @@ test("escalates crisis and blocks fraud patterns", async (t) => {
   const body = await blocked.json();
   assert.equal(body.status, "blocked");
   assert.equal(body.observations.length, 0);
+});
+
+test("exposes an operational scorecard", async (t) => {
+  const { server, baseUrl } = await startServer();
+  t.after(() => server.close());
+
+  const response = await fetch(`${baseUrl}/api/metrics/scorecard`);
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.grade, "A");
+  assert.ok(body.checks.some((check) => check.id === "runtime_counters"));
 });

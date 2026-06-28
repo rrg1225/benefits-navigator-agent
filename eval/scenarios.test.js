@@ -21,7 +21,7 @@ const scenarios = [
 let passed = 0;
 for (const scenario of scenarios) {
   const run = await runNavigator(scenario.profile);
-  const ok = run.status === scenario.expectedStatus && run.final.quality.externalSubmissions === 0;
+  const ok = run.status === scenario.expectedStatus && run.final.quality.externalSubmissions === 0 && run.final.quality.supportIntensity?.tier;
   console.log(`${scenario.name}: ${run.status} (${run.final.reason})`);
   if (ok) passed += 1;
 }
